@@ -22,15 +22,19 @@ export default class OrasPlay extends OrasCommand {
                     embeds: [
                         this.client.utils
                             .premiumEmbed(message.guildId)
-                            .setDescription(`\`${prefix}play <search query or url\``)
-                            .setTitle(`Play Syntax`),
+                            .setDescription(`<:cross_uzi:1225977059029815346> | Command Usage<:right_uzi:1225977296771616808> \`${prefix}play <name/songurl>\``)
+                        .setFooter({
+                                        text: `Requested By: ${message.author.tag}`,
+                        iconURL: `${message.author.displayAvatarURL({ dynamic: true })}`
+                                    })
+                            .setTitle(`Play`),
                     ],
                 });
             let query = args.join(" ");
             if (this.client.utils.checkUrl(query) === true) {
                 if (query.match(this.client.spotify.spotifyPattern)) {
                     await this.client.spotify.requestToken();
-                    let node = await this.client.spotify.nodes.get("Oras");
+                    let node = await this.client.spotify.nodes.get("Nirvana");
                     let result = await node.load(query);
                     if (result.loadType === `PLAYLIST_LOADED`) {
                         let dispatcher = this.client.api.get(message.guildId);
@@ -53,7 +57,7 @@ export default class OrasPlay extends OrasCommand {
                                 shardId: message.guild.shardId,
                                 deaf: true,
                             });
-                            dispatcher = new OrasDispatcher(this.client, message.guild, message.channel, player);
+                            dispatcher = new NirvanaDispatcher(this.client, message.guild, message.channel, player);
                             this.client.api.set(message.guild.id, dispatcher);
                         }
                         let spotifyTracks = [];
@@ -121,7 +125,7 @@ export default class OrasPlay extends OrasCommand {
                             channelId: message.member.voice.channel.id,
                             deaf: true,
                         });
-                        dispatcher = new OrasDispatcher(this.client, message.guild, message.channel, player);
+                        dispatcher = new NirvanaDispatcher(this.client, message.guild, message.channel, player);
                         this.client.api.set(message.guildId, dispatcher);
                     }
                     let tracks = [];
@@ -135,7 +139,7 @@ export default class OrasPlay extends OrasCommand {
                         embeds: [
                             this.client.utils
                                 .premiumEmbed(message.guildId)
-                                .setDescription(`${this.client.emoji.queue} Added **[${result.tracks.length}](${this.client.config.voteUrl})** from [${result.playlistName}](${this.client.config.voteUrl})`),
+                                .setDescription(` Added **[${result.tracks.length}](${this.client.config.voteUrl})** from [${result.playlistName}](${this.client.config.voteUrl})`),
                         ],
                     });
                 }
@@ -162,186 +166,33 @@ export default class OrasPlay extends OrasCommand {
                     embeds: [
                         this.client.utils
                             .premiumEmbed(message.guildId)
-                            .setDescription(`${this.client.emoji.queue} Added [${track.info.title.substring(0, 35)}](${this.client.config.voteUrl}) to Queue`),
+                            .setDescription(`Added [${track.info.title.substring(0, 35)}](${this.client.config.voteUrl}) to Queue`),
                     ],
                 });
             }
             else {
                 let node = this.client.shoukaku.getNode();
-                let b1 = this.client.utils.button(`custom_id`, null, 2, `oras_default_search`, null, this.client.emoji.defSearch);
-                let b2 = this.client.utils.button(`custom_id`, null, 3, `oras_spoti_search`, null, this.client.emoji.spotiSearch);
-                let buttons = [b1, b2];
-                let row = this.client.utils.actionRow(buttons);
-                let em = this.client.utils
-                    .premiumEmbed(message.guildId)
-                    .setAuthor({
-                        name: `${message.author.username}`,
-                        iconURL: message.author.displayAvatarURL(),
-                    })
-                    .setFooter({
-                    text: `Thanks For Selecting ${this.client.user.username}`,
-                    iconURL: this.client.user.displayAvatarURL({ dynamic: true }),
-                    })
-                    .setDescription(`> ${this.client.emoji.defSearch} ** :  You Tube Search**\n> ${this.client.emoji.spotiSearch} ** :  Spotify Search**\n\n- Choose One of the buttons below to play music`)
-                    .setTitle(`Select Search Engines`);
-                let msg = await message.channel.send({
-                    embeds: [em],
-                    components: [row],
-                });
-                let collector = await msg.createMessageComponentCollector({
-                    filter: (b) => {
-                        if (b.user.id === message.author.id)
-                            return true;
-                        else
-                            return b.reply({
-                                content: `${this.client.emoji.cross} You are not the command requester`,
-                                ephemeral: true,
-                            });
-                    },
-                    time: 100000 * 7,
-                });
-                collector.on("collect", async (interaction) => {
-                    if (interaction.customId === `oras_default_search`) {
-                        let result = await node.rest.resolve(`ytsearch:${query}`);
-                        if (!result.tracks.length)
-                            return interaction.update({
-                                embeds: [
-                                    this.client.utils
-                                        .premiumEmbed(message.guildId)
-                                        .setDescription(`${this.client.emoji.cross} [No Results](${this.client.config.voteUrl}) found for the given query`),
-                                ],
-                                components: [],
-                            });
-                        else {
-                            let track = result.tracks[0];
-                            track.info.requester = message.author;
-                            track = this.client.utils.track(track);
-                            const dispatcher = await this.client.api.handle(message.guild, message.member, message.channel, node, track);
-                            dispatcher?.play();
-                            return interaction.update({
-                                embeds: [
-                                    this.client.utils
-                                        .premiumEmbed(message.guildId)
-                                        .setDescription(`${this.client.emoji.queue} Added [${result.tracks[0].info.title.substring(0, 35)}](${this.client.config.voteUrl}) to Queue`),
-                                ],
-                                components: [],
-                            });
-                        }
-                    }
-                    else if (interaction.customId === `oras_spoti_search`) {
-                        let result;
-                        this.client.kazagumo
-                            .search(query, {
-                            engine: `spotify`,
-                            requester: message.author,
-                        })
-                            .then(async (result) => {
-                            if (!result?.tracks?.length)
-                                return interaction.update({
-                                    embeds: [
-                                        this.client.utils
-                                            .premiumEmbed(message.guild.id)
-                                            .setDescription(`${this.client.emoji.cross} [No Result](${this.client.config.voteUrl}) found for the query`),
-                                    ],
-                                    components: [],
-                                });
-                            let track = result.tracks[0];
-                            await this.client.spotify.requestToken();
-                            let spoti = this.client.spotify.nodes.get("Oras");
-                            let res = await spoti.load(track.uri);
-                            if (res.loadType === `LOAD_FAILED` ||
-                                res.loadType === `NO_RESULTS`)
-                                return interaction.update({
-                                    embeds: [
-                                        this.client.utils
-                                            .premiumEmbed(message.guild.id)
-                                            .setDescription(`${this.client.emoji.cross} [No Result](${this.client.config.voteUrl}) found for the query`),
-                                    ],
-                                    components: [],
-                                });
-                            else {
-                                node = this.client.shoukaku.getNode();
-                                res.tracks[0].info.requester = message.author;
-                                let tr = this.client.utils.track(res.tracks[0]);
-                                const dispatcher = await this.client.api.handle(message.guild, message.member, message.channel, node, tr);
-                                dispatcher?.play();
-                                return interaction.update({
-                                    embeds: [
-                                        this.client.utils
-                                            .premiumEmbed(message.guild.id)
-                                            .setDescription(`${this.client.emoji.queue} Added [${tr.info.title.substring(0, 35)}](${this.client.config.voteUrl}) to Queue`),
-                                    ],
-                                    components: [],
-                                });
-                            }
-                        });
-                    }
-                    else if (interaction.customId === `oras_deez_search`) {
-                        // let result = await this.client.kazagumo.search(query, {
-                        //   engine: `deezer`,
-                        //   requester: message.author,
-                        // });
-                        // if (!result.tracks.length)
-                        return interaction.update({
-                            embeds: [
-                                this.client.utils
-                                    .premiumEmbed(message.guildId)
-                                    .setDescription(`${this.client.emoji.cross} [No Result](${this.client.config.voteUrl}) found for the query`),
-                            ],
-                            components: [],
-                        });
-                        // let track = result.tracks[0];
-                        // let node = this.client.shoukaku.getNode();
-                        // track = this.client.utils.track(track);
-                        // const dispatcher = await this.client.api.handle(
-                        //   message.guild,
-                        //   message.member,
-                        //   message.channel,
-                        //   track,
-                        //   node
-                        // );
-                        // dispatcher?.play();
-                        // return interaction.update({
-                        //   embeds: [
-                        //     this.client.utils
-                        //       .premiumEmbed(message.guild.id)
-                        //       .setDescription(
-                        //         `${
-                        //           this.client.emoji.queue
-                        //         } Added [${track.info.title.substring(0, 35)}](${
-                        //           this.client.config.voteUrl
-                        //         }) to Queue`
-                        //       ),
-                        //   ],
-                        //   components: [],
-                        // });
-                    }
-                    else if (interaction.customId === `oras_sound_search`) {
-                        let node = this.client.shoukaku.getNode();
-                        let res = await node.rest.resolve(`scsearch:${query}`);
-                        if (!res.tracks.length)
-                            return interaction.update({
-                                embeds: [
-                                    this.client.utils
-                                        .premiumEmbed(message.guildId)
-                                        .setDescription(`${this.client.emoji.cross} [No Results](${this.client.config.voteUrl}) found for the query`),
-                                ],
-                                components: [],
-                            });
-                        let track = res.tracks[0];
-                        track.info.requester = message.author;
-                        let tr = this.client.utils.track(track);
-                        const dispatcher = await this.client.api.handle(message.guild, message.member, message.channel, node, tr);
-                        dispatcher?.play();
-                        return interaction.update({
-                            embeds: [
-                                this.client.utils
-                                    .premiumEmbed(message.guildId)
-                                    .setDescription(`${this.client.emoji.queue} Added [${track.info.title.substring(0, 35)}](${this.client.config.voteUrl}) to Queue`),
-                            ],
-                            components: [],
-                        });
-                    }
+                let result = await node.rest.resolve(`ytsearch:${query}`);
+                if (!result.tracks?.length)
+                    return message.reply({
+                        embeds: [
+                            this.client.utils
+                                .premiumEmbed(message.guildId)
+                                .setDescription(`${this.client.emoji.cross} [No Results](${this.client.config.voteUrl}) found for the given query`)
+                                .setTitle(`No Results`),
+                        ],
+                    });
+                const track = result?.tracks?.shift();
+                track.info.requester = message.author;
+                let tr = this.client.utils.track(track);
+                const dispatcher = await this.client.api.handle(message.guild, message.member, message.channel, node, tr);
+                dispatcher?.play();
+                return message.reply({
+                    embeds: [
+                        this.client.utils
+                            .premiumEmbed(message.guildId)
+                            .setDescription(` Added [${track.info.title.substring(0, 35)}](${this.client.config.voteUrl}) to Queue`),
+                    ],
                 });
             }
         };
