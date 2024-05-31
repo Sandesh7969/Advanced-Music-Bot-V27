@@ -23,13 +23,13 @@ export default class OrasConfig extends Object {
         this.nodes = [
             {
                 name: `Kronix`,
-                url: `buses.sleepyinsomniac.eu.org`,
+                url: `ll.sleepyinsomniac.eu.org`,
                 auth: `youshallnotpass`,
                 secure: false,
             },
           {
               name: `Oras`,
-              url: `ll.sleepyinsomniac.eu.org`,
+              url: `buses.sleepyinsomniac.eu.org`,
               auth: `youshallnotpass`,
               secure: false,
           }, // Dont Change The Name Of Nodes
@@ -52,9 +52,9 @@ export default class OrasConfig extends Object {
             {
                 id: `Kronix`,
                 host: `ll.sleepyinsomniac.eu.org`,
-                port: 443,
+                port: 80,
                 password: `youshallnotpass`,
-                secure: true,
+                secure: false,
             },
           {
               id: `Oras`,
