@@ -36,7 +36,7 @@ export default class OrasEmoji extends Object {
             filters: "<:queue:1243736955381092432>",
             info: "<:x_info:1239384932019867689>",
             utility: "<:x_setting:1239384634958155777>",
-            allCommands: "<a:_:1243527241762340985>",
+            allCommands: "<:x_world:1239384564883918929>",
         };
         this.setup = {
             pause: "<:x_pause:1239384816990949437>",
