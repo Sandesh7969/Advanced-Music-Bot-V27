@@ -14,12 +14,12 @@ export default class Ready extends OrasEvent {
                     status: `dnd`,
                 },
                 {
-                    content: `Kronix | ${this.client.config.prefix}help`,
+                    content: `Sukuna | ${this.client.config.prefix}help`,
                     type: 2,
                     status: `idle`,
                 },
                 {
-                    content: `Kronix | ${this.client.config.prefix}play`,
+                    content: `Sukuna | ${this.client.config.prefix}play`,
                     type: 3,
                     status: `online`,
                 },
