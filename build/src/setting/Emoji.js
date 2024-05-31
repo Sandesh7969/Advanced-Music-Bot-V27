@@ -1,17 +1,17 @@
 export default class OrasEmoji extends Object {
     constructor(client) {
         super();
-        this.tick = "<a:tick_kastro:1064407263000936469>";
-        this.cross = "<a:wrong_kastro:1064407309482205184>";
-        this.playing = "<:music__kastro:1064440924190539888>";
-        this.exclamation = "<:exclamation_kastro:1064433487337242665>";
-        this.queue = "<:kronixqueue:1075041107039244308>";
-        this.info = "<:exclamation_kastro:1064433487337242665>";
-        this.defSearch = "<:TMF_YouTube:1169578474336424037>";
-        this.premium = "<:event_kastro:1064437428888281138>";
+        this.tick = "<:x_tick:1239384584315994153>";
+        this.cross = "<:x_cross:1239384581921050726>";
+        this.playing = "<:x_music:1239384630621245562>";
+        this.exclamation = "<:x_info:1239384932019867689>";
+        this.queue = "<:queue:1243736955381092432>";
+        this.info = "<:x_info:1239384932019867689>";
+        this.defSearch = "<:youtube:1246014166704066642>";
+        this.premium = "<:x_diamond:1239384621301501982>";
         this.invite = "<:icons_invite:1166374883912065044>";
         this.support = "<:Support:1166374880040734781>";
-        this.spotiSearch = "<a:spotify:1169747235748184134>";
+        this.spotiSearch = "<:x_spotify:1239384520839663736>";
         this.deezSearch = "<:Deezer_oras:1065634451603861545>";
         this.vote = "<:voter:1166374882053984296>";
         this.soundSearch = "<:Soundcloud_oras:1065634569262473277>";
@@ -31,23 +31,23 @@ export default class OrasEmoji extends Object {
             user: "<:kronix_member:1075040201195393074>",
         };
         this.helpMenu = {
-            music: "<:music__kastro:1064440924190539888>",
-            home: "<:Home:1166377282726797323>",
-            filters: "<:icons_control:1166377285499224164>",
-            info: "<:exclamation_kastro:1064433487337242665>",
-            utility: "<:settings:1166377288171004054>",
-            allCommands: "<:icons_richpresence:1166377290662432809>",
+            music: "<:x_music:1239384630621245562>",
+            home: "<:x_home:1239384525973491802>",
+            filters: "<:queue:1243736955381092432>",
+            info: "<:x_info:1239384932019867689>",
+            utility: "<:x_setting:1239384634958155777>",
+            allCommands: "<a:_:1243527241762340985>",
         };
         this.setup = {
-            pause: "<:ss_pause:1099927332204073011>",
+            pause: "<:x_pause:1239384816990949437>",
             resume: "<:resume:1099927448734408744>",
             skip: "<:forward10:986893749005217812>",
             previous: "<:Oras_Previous:1137298056283430982>",
             shuffle: "<:shuffle:1139766210213462066>",
             author: "<:icons_queue:1166374069717958666>",
-            nowPlaying: "<:kronix_member:1075040201195393074>",
+            nowPlaying: "<:x_music:1239384630621245562>",
             requester: "<:kronix_member:1075040201195393074>",
-            duration: "<:duration333:1169749340923904060>",
+            duration: "<:x_time:1239384666121965708>",
             stop: "<:ss_stop:1099927856651436082>",
             loop: "<:loop:1129823572991426651>",
             volLow: "<:lower_vol:1139766602527690902>",
